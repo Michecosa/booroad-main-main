@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useSearch } from "../context/SearchContext";
-/* import { useSearch } from "../context/SearchContext"; */
+import viaggi from "../data/viaggi";
 
 export default function DettaglioViaggio() {
-
   const { id } = useParams();
 
-  const { search, trips, setTrips } = useSearch()
+  const { search, trips, setTrips } = useSearch();
 
   //get the single trip
   const singleTrip = trips.find((items) => items.id == id);
@@ -29,17 +28,19 @@ export default function DettaglioViaggio() {
     }
   });
 
-
-
   function handleTrash(codiceFiscale) {
     const removeTraveler = singleTrip.viaggiatori.filter(
       (viaggiatore) => viaggiatore.codiceFiscale !== codiceFiscale
     );
 
-    setTrip([{ ...trip[0], viaggiatori: removeTraveler }]);
+    setTrips(
+      trips.map((trip) =>
+        trip.id == id ? { ...trip, viaggiatori: removeTraveler } : trip
+      )
+    );
   }
 
-  useEffect(() => { }, [trips])
+  useEffect(() => {}, [trips]);
 
   return (
     <>
@@ -48,7 +49,9 @@ export default function DettaglioViaggio() {
           <div className="col-lg-8 col-sm-12">
             <div className="d-flex justify-content-between mb-3">
               <h2 className="fs-3">Rubrica Viaggiatori</h2>
-              <Link to={`/${id}/travelerForm`} className="btn btn-primary">Aggiungi Viaggiatore</Link>
+              <Link to={`/${id}/travelerForm`} className="btn btn-primary">
+                Aggiungi Viaggiatore
+              </Link>
             </div>
             <table className="table table-striped">
               <thead>
